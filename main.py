@@ -20,10 +20,30 @@ nodes.append(p1)
 nodes.append(p2)
 nodes.append(p3)
 
-test = fe.mesh(nodes)
-#test.plot_mesh(nodes)
-test.export_nodes(nodes)
-test.export_mech(E)
+
+#identifie the link
+link1 = [3,4]
+link2 = [3,2]
+link3 = [3,1]
+
+links =[]
+
+links.append(link1)
+links.append(link2)
+links.append(link3)
+
+for i in range(0,len(links)):
+    print(links[i])
+    print(nodes[links[i][0]-1],nodes[links[i][1]-1])
+print(links)
+
+test = fe.mesh(nodes,links)
+test.plot_mesh()
+#test.export_nodes(nodes)
+#test.export_mech(E)
+
+#exemple = fe.finite_elements_methods()
+#exemple.run()
 
 end = time.time() #end the timer
 
