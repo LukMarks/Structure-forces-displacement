@@ -32,10 +32,8 @@ links.append(link1)
 links.append(link2)
 links.append(link3)
 
-for i in range(0,len(links)):
-    print(links[i])
-    print(nodes[links[i][0]-1],nodes[links[i][1]-1])
-print(links)
+#Define the Forces
+F = []
 
 test = fe.mesh(nodes,links)
 test.plot_mesh()
