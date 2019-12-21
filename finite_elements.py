@@ -36,15 +36,14 @@ class mesh:
 
     def plot_mesh(self):
         plt.figure(1)
-        print('plot_mesh')
         for i in range(0,len(self.nodes)):
             plt.scatter(self.nodes[i][0],self.nodes[i][1],label=('Node '+str(i+1)))
             
         for i in range(0,len(self.links)):
             plt.plot([self.nodes[self.links[i-1][0]-1][0], self.nodes[self.links[i-1][1]-1][0]],
                         [self.nodes[self.links[i-1][0]-1][1], self.nodes[self.links[i-1][1]-1][1]],label=('Element '+str(i+1)) )
-
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        plt.title("Figure 01 Initial Mesh")
         plt.show()
         return
 
