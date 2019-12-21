@@ -4,11 +4,13 @@
 # with a couple fortran routines
 
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 class mesh:
-    def __init__(self, nodes):
+    def __init__(self, nodes,links):
         self.nodes = nodes
+        self.links = links
         return
     
 
@@ -26,24 +28,33 @@ class mesh:
         f.close()
         return
 
-    def plot_mesh(self, nodes):
+    def export_setup(self,E): #export the setup configuration for the fortran routine
+        f = open('setup.dat','w')
+        f.write('%f \n' % (E))
+        f.close()
+        return
+
+    def plot_mesh(self):
         plt.figure(1)
-        for i in range(0,len(nodes)):
-            plt.scatter(nodes[i][0],nodes[i][1],label=('Node '+str(i+1)))
-            if i == len(nodes):
-                print('foi')
-                plt.plot([nodes[i][0], nodes[-1][0]],
-                         [nodes[i][1], nodes[-1][1]])
-            else:
-                plt.plot([nodes[i][0], nodes[i+1][0]],
-                         [nodes[i][1], nodes[i+1][1]])
+        print('plot_mesh')
+        for i in range(0,len(self.nodes)):
+            plt.scatter(self.nodes[i][0],self.nodes[i][1],label=('Node '+str(i+1)))
+            
+        for i in range(0,len(self.links)):
+            plt.plot([self.nodes[self.links[i-1][0]-1][0], self.nodes[self.links[i-1][1]-1][0]],
+                        [self.nodes[self.links[i-1][0]-1][1], self.nodes[self.links[i-1][1]-1][1]],label=('Element '+str(i+1)) )
+
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         plt.show()
         return
 
-class finite_elements:
+class finite_elements_methods:
     def __init__(self):
         pass
+        return
+    
+    def run(self):
+        os.system('./finite_elements')
         return
 
 
