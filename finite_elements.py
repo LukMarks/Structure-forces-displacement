@@ -28,9 +28,16 @@ class mesh:
         f.close()
         return
 
-    def export_setup(self,E): #export the setup configuration for the fortran routine
+    def export_setup(self,nodes): #export the setup configuration for the fortran routine
         f = open('setup.dat','w')
-        f.write('%f \n' % (E))
+        f.write('%f \n' % (int(len(nodes))))
+        f.close()
+        return
+
+    def export_free_node(self,node): #export the free nodes for the fortran routine
+        f = open('free.dat','w')
+        for i in range(0,len(node)):
+            f.write('%f \n' % (int(node[i])))
         f.close()
         return
 
