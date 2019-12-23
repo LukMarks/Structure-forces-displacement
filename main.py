@@ -20,6 +20,9 @@ nodes.append(p1)
 nodes.append(p2)
 nodes.append(p3)
 
+#Free nodes
+free_nodes = [3] # the number(s) of the free node(s)
+
 
 #identifie the link
 link1 = [3,4]
@@ -39,6 +42,9 @@ test = fe.mesh(nodes,links)
 test.plot_mesh()
 #test.export_nodes(nodes)
 #test.export_mech(E)
+test.export_setup(nodes)
+test.export_free_node(free_nodes)
+
 
 #exemple = fe.finite_elements_methods()
 #exemple.run()
