@@ -6,7 +6,12 @@ import finite_elements as fe
 
 start  = time.time() #start the timer
 
-E = 1e6 #[N/m²] Young Modulus 
+E = 2e6 #[N/m²] Young Modulus 
+
+A = [6, #[m²] Section area from element 1
+     8, #[m²] Section area from element 2 
+     8  #[m²] Section area from element  3
+    ]
 
 #define the nodes coordenates
 p0 = [0,0] #[m] x,y coordenates
@@ -41,7 +46,7 @@ F = []
 test = fe.mesh(nodes,links)
 test.plot_mesh()
 #test.export_nodes(nodes)
-#test.export_mech(E)
+#test.export_young_modolus(E)
 test.export_setup(nodes)
 test.export_free_node(free_nodes)
 
