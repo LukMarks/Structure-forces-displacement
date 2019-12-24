@@ -4,6 +4,7 @@
 ! mesh generation
 program mesh
     implicit none
+
     integer :: n_nodes                                      !number of the nodes
     real :: angle                                           ![degree] temporary angle
     real :: alfa                                            ![degree] angle between two elements
@@ -19,16 +20,24 @@ program mesh
     read(1,*) n_nodes
     close(1)
 
-    real, dimension(n_nodes,2) :: nodes                           ![m](x,y) nodes coordenates
-    real:: L(n_nodes-1)                                                   ![m] length of the element
-    open(2, file='inputMech.dat')
+    open(2, file='input_young_modulos.dat')
     read(2,*) E
     close(2)
 
-    open(3, file='inputNodes.dat')
+
+    !real,allocatable, dimension(:,:) :: nodes                           ![m](x,y) nodes coordenates
+    !allocate(nodes(n_nodes,2))
+
+    real,dimension(4,2) :: nodes                    ![m](x,y) nodes coordenates
+    open(3, file='input_nodes.dat')
     read(3,*) nodes
     close(3)
 
+    !deallocate(nodes)
+
+   ! real:: L(n_nodes-1)                                                   ![m] length of the element
+
+    
 
     L(1) = sqrt((nodes(2,1)-nodes(1,1))**2+(nodes(2,2)-nodes(1,2))**2)
     L(2) = sqrt((nodes(3,1)-nodes(2,1))**2+(nodes(3,2)-nodes(2,2))**2)
