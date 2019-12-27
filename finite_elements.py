@@ -18,10 +18,19 @@ class mesh:
     def export_nodes(self,nodes): #export the input nodes coordenates for the fortran routine
         f = open('input_nodes.dat','w')
         for i in range(0,len(nodes)):
-            f.write('%f ' % (nodes[i][0]))
+            f.write('%f,' % (nodes[i][0]))
             f.write('%f\n' % (nodes[i][1]))
         f.close()
         return
+
+    def export_link(self,link): #export the input links for the fortran routine
+        f = open('input_links.dat','w')
+        for i in range(0,len(link)):
+            f.write('%i,' % (link[i][0]))
+            f.write('%i\n' % (link[i][1]))
+        f.close()
+        return
+
     def export_young_modolus(self,E): #export the input values of Young Modulos propertie for the fortran routine
         f = open('input_young_modulos.dat','w')
         f.write('%f \n' % (E))
@@ -37,16 +46,17 @@ class mesh:
 
 
 
-    def export_setup(self,nodes): #export the setup configuration for the fortran routine
+    def export_setup(self,nodes, elements): #export the setup configuration for the fortran routine
         f = open('setup.dat','w')
-        f.write('%f \n' % (int(len(nodes))))
+        f.write('%i \n' % (int(len(nodes))))
+        f.write('%i \n' % (int(elements)))        
         f.close()
         return
 
     def export_free_node(self,node): #export the free nodes for the fortran routine
         f = open('free.dat','w')
         for i in range(0,len(node)):
-            f.write('%f \n' % (int(node[i])))
+            f.write('%i \n' % (int(node[i])))
         f.close()
         return
 
