@@ -40,14 +40,17 @@ links.append(link1)
 links.append(link2)
 links.append(link3)
 
+n_elements = 3
+
 #Define the Forces
 F = []
 
 test = fe.mesh(nodes,links)
 test.plot_mesh()
-#test.export_nodes(nodes)
-#test.export_young_modolus(E)
-test.export_setup(nodes)
+test.export_nodes(nodes)
+test.export_link(links)
+test.export_young_modolus(E)
+test.export_setup(nodes,n_elements)
 test.export_free_node(free_nodes)
 
 
