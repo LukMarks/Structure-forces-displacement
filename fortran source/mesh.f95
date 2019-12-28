@@ -61,7 +61,7 @@ program mesh
     close(4)
 
     print *, links
-    deallocate(links)
+    
 
     print *
     print *, "-------------- Calculating Element's Properties  --------------"
@@ -69,29 +69,32 @@ program mesh
     allocate ( L(n_elements) )
     
     do i=1,n_elements
-        !L(i) = nodes(i,1)
 
-        xi = nodes(int(links(i,2)),1)
-        yi = nodes(int(links(i,1)),1)
 
-        xj = nodes(int(links(i,2)),2)
-        yj = nodes(int(links(i,1)),2)
+        print *
+        print *,'element: ',i
+
+        xi = nodes(int(links(i,1)),1)
+        yi = nodes(int(links(i,1)),2)
+
+        xj = nodes(int(links(i,2)),1)
+        yj = nodes(int(links(i,2)),2)
 
         print *,xi,yi
         print *
-        print *,xi,yi
+        print *,xj,yj
 
         x = xj- xi
         y = yj-yi
         print *
         print *,x,y
         L(i) = sqrt(x**2+y**2)
-        !L(i) = sqrt(( nodes(int(links(i,2)),1) - nodes(int(links(i,1)),1) )**2) !+ ( nodes(int(links(i,2)),2) - nodes( int(links(i,1)) ,2 ) )**2+) 
 
     end do
 
     print *, L
     deallocate(L)
+    deallocate(links)
     deallocate(nodes)
 
 
