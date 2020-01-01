@@ -8,13 +8,14 @@ program mesh
     integer :: n_nodes                                         !number of the nodes
     integer :: n_elements                                         !number of the nodes
     real :: angle                                           ![degree] temporary angle
-    real :: alfa                                            ![degree] angle between two elements 
+    !real :: alfa                                            ![degree] angle between two elements 
     real :: x,y,xi,xj,yi,yj                                 ![m] elements coordenates
     integer :: i,start,end
-    real, dimension(:,:),allocatable :: nodes               ![m](x,y) nodes coordenates
-    real, dimension(:,:),allocatable :: links               ![m](x,y) nodes coordenates
-    real, dimension(:),allocatable :: L               ![m](x,y) nodes coordenates
-    
+    real, dimension(:,:), allocatable :: nodes               ![m](x,y) nodes coordenates
+    real, dimension(:,:), allocatable :: links               ![m](x,y) nodes coordenates
+    real, dimension(:), allocatable :: L               ![m](x,y) nodes coordenates
+    real, dimension(:), allocatable :: alfa                                            ![degree] angle between two elements 
+    real, parameter :: pi = 3.1415927
     integer, parameter :: ikind=selected_real_kind(p=18)    !define precision 
     real(kind = ikind) :: E                                 ![N/m²] Young Modulus
 
@@ -67,7 +68,8 @@ program mesh
     print *, "-------------- Calculating Element's Properties  --------------"
 
     allocate ( L(n_elements) )
-    
+    allocate ( alfa(n_elements) )
+
     do i=1,n_elements
 
 
@@ -89,11 +91,19 @@ program mesh
         print *
         print *,x,y
         L(i) = sqrt(x**2+y**2)
+        alfa(i) = atan(y/x) * 180/pi
+        if (xj < xi) then 
+            alfa(i) = alfa(i) +180
+        end if
+
 
     end do
 
     print *, L
+    print *
+    print *,alfa
     deallocate(L)
+    deallocate(alfa)
     deallocate(links)
     deallocate(nodes)
 
