@@ -52,6 +52,7 @@ test.export_link(links)
 test.export_young_modolus(E)
 test.export_setup(nodes,n_elements)
 test.export_free_node(free_nodes)
+test.export_elements_area(A)
 
 
 #exemple = fe.finite_elements_methods()
