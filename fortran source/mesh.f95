@@ -10,9 +10,10 @@ program mesh
     real :: angle                                           ![degree] temporary angle
     !real :: alfa                                            ![degree] angle between two elements 
     real :: x,y,xi,xj,yi,yj                                 ![m] elements coordenates
-    integer :: i,start,end
+    integer :: i,j
     real, dimension(:,:), allocatable :: nodes               ![m](x,y) nodes coordenates
     real, dimension(:,:), allocatable :: links               ![m](x,y) nodes coordenates
+    real, dimension(:), allocatable :: start,end               ![m](x,y) nodes coordenates
     real, dimension(:), allocatable :: L               ![m](x,y) nodes coordenates
     real, dimension(:), allocatable :: alfa                                            ![degree] angle between two elements 
     real, parameter :: pi = 3.1415927
@@ -56,12 +57,18 @@ program mesh
     print *, '-------------- Importing Links --------------'
     
     allocate ( links(n_elements,2) ) 
+    allocate (start(n_elements) )
+    allocate (end(n_elements) )
 
     open(4, file='input_links.dat')
     read(4,*) links
     close(4)
 
     print *, links
+    
+    open(4, file='input_links.dat')
+    read(4,*) start,end
+    close(4)
     
 
     print *
@@ -79,13 +86,16 @@ program mesh
         xi = nodes(int(links(i,1)),1)
         yi = nodes(int(links(i,1)),2)
 
+        print *,'--------------------------------------'
+        print *
+        print *,'node i ',xi,yi
+
         xj = nodes(int(links(i,2)),1)
         yj = nodes(int(links(i,2)),2)
 
-        print *,xi,yi
         print *
-        print *,xj,yj
-
+        print *,'node j ',xj,yj
+        print *,'--------------------------------------'
         x = xj- xi
         y = yj-yi
         print *
@@ -98,6 +108,26 @@ program mesh
 
 
     end do
+    !print *,'================= Debug =================================='
+    !do i=1,n_elements
+    !   
+    !
+    !        
+    !
+    !        xi = nodes(int(links(i,j)),1)
+    !        yi = nodes(int(links(i,j)),2)
+    !
+    !        print *,'link: ',links(i,1),links(i,2)
+    !        print *, 'start: ',start(i),'end: ',end(i) 
+    !
+    !
+           ! print *, 'xi: ', 
+    !
+            !print *, 'nodes: ',xi,yi
+!
+!end do
+!    print *,'==================================================='
+    
 
     print *, L
     print *
@@ -106,6 +136,9 @@ program mesh
     deallocate(alfa)
     deallocate(links)
     deallocate(nodes)
+
+    deallocate(start)
+    deallocate(end)
 
 
     print *
