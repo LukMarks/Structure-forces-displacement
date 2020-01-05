@@ -9,14 +9,11 @@ program mesh
     integer :: n_elements                                         !number of the nodes
     real :: x,y,xi,xj,yi,yj                                 ![m] elements coordenates
     real :: c,s                                              ![] values for cossine and sine values
-    real :: A                                                ![m²] Section area of the element
     integer :: i,j,col
-    real, dimension(:), allocatable :: coord               ![m](x,y) nodes coordenates
+    real, dimension(:), allocatable :: A                                                ![m²] Section area of the element
     real, dimension(:,:), allocatable :: nodes               ![m](x,y) nodes coordenates
     real, dimension(:,:), allocatable :: links               ![m](x,y) nodes coordenates
-    !real, dimension(:), allocatable :: links               ![m](x,y) nodes coordenates
     real, dimension(:,:), allocatable :: output_matrix       ![-] the input's matrix used in the stiffness matrix 
-    real, dimension(:), allocatable :: start,end               ![m](x,y) nodes coordenates
     real, dimension(:), allocatable :: L               ![m](x,y) nodes coordenates
     real, dimension(:), allocatable :: alfa                                            ![degree] angle between two elements 
     real, parameter :: pi = 3.1415927
@@ -44,7 +41,6 @@ program mesh
     print *
     print *, '-------------- Importing Nodes --------------'
 
-    allocate ( coord(n_nodes*2) ) 
     allocate ( nodes(n_nodes,2) )
 
 
@@ -62,9 +58,6 @@ program mesh
     print *, '-------------- Importing Links --------------'
     
     allocate ( links(n_elements,2) ) 
-    !allocate ( links(n_elements*2) ) 
-    allocate (start(n_elements) )
-    allocate (end(n_elements) )
 
     open(4, file='input_links.dat')
     read(4,*) links
@@ -76,12 +69,11 @@ program mesh
     END DO
     close(4)
 
-    !print *, links
-    
-    open(4, file='input_links.dat')
-    read(4,*) start,end
-    close(4)
-    
+    allocate( A(n_elements))
+    open(5, file='input_area.dat')
+    READ(5,*) A
+    CLOSE(5)
+
 
     print *
     print *, "-------------- Calculating Element's Properties  --------------"
@@ -120,7 +112,7 @@ program mesh
 
 
     end do
-    
+
     !print *,'================= Debug =================================='
     !do i=1,n_elements
     !    do j =1,n_elements
@@ -150,54 +142,42 @@ program mesh
 
     allocate ( output_matrix(n_elements,13) )    
 
-    !do i=1,n_elements
-        !c = cos(alfa(i))
-        !s = sin(alfa(i))
-        !output_matrix(i,1) = E
-        !output_matrix(i,2) = A(i)
-        !output_matrix(i,3) = L(i)
-        !output_matrix(i,4) = alfa(i)
-        !output_matrix(i,5) = c
-        !output_matrix(i,6) = s
-        !output_matrix(i,7) = c*s
-        !output_matrix(i,8) = c**2
-        !output_matrix(i,9) = s**2
-        !output_matrix(i,10) = (E*A(i)*(c**2))/L(i)
-       ! output_matrix(i,11) = (E*A(i)*(s**2))/L(i)
-      !  output_matrix(i,12) = (E*A(i)*(s*c))/L(i)
-     !   output_matrix(i,13) = (E*A(i))/L(i)
-    !end do
-
-
-
-    print *, L
-    print *
-    print *,alfa
-
+    do i=1,n_elements
+        c = cos(alfa(i))
+        s = sin(alfa(i))
+        output_matrix(i,1) = E
+        output_matrix(i,2) = A(i)
+        output_matrix(i,3) = L(i)
+        output_matrix(i,4) = alfa(i)
+        output_matrix(i,5) = c
+        output_matrix(i,6) = s
+        output_matrix(i,7) = c*s
+        output_matrix(i,8) = c**2
+        output_matrix(i,9) = s**2
+        output_matrix(i,10) = (E*A(i)*(c**2))/L(i)
+        output_matrix(i,11) = (E*A(i)*(s**2))/L(i)
+        output_matrix(i,12) = (E*A(i)*(s*c))/L(i)
+        output_matrix(i,13) = (E*A(i))/L(i)
+    end do
 
     print *
     print *, 'Exported mesh'
     print *, '===================================='
-    !print *, output_matrix
+    print *, output_matrix
     print *, '===================================='
 
 
-    !open(10, file = 'stiffness_input')
-
-    !write(10,*) output_matrix
-
-    !close(10)
+    open(10, file = 'stiffness_input.dat')
+    do i=1,n_elements
+        write(10,*) output_matrix(i,:)
+    end do
+    close(10)
 
     deallocate(L)
     deallocate(alfa)
     deallocate(links)
     deallocate(nodes)
     deallocate(output_matrix)
-    deallocate(coord)
-
-
-    deallocate(start)
-    deallocate(end)
 
 
 
