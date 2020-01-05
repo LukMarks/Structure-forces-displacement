@@ -10,7 +10,7 @@ E = 2e6 #[N/m²] Young Modulus
 
 A = [6, #[m²] Section area from element 1
      8, #[m²] Section area from element 2 
-     8  #[m²] Section area from element  3
+     8  #[m²] Section area from element 3
     ]
 
 #define the nodes coordenates
