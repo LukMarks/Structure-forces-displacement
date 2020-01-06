@@ -5,21 +5,19 @@
 program mesh
     implicit none
 
-    integer :: n_nodes                                         !number of the nodes
-    integer :: n_elements                                         !number of the nodes
-    real :: x,y,xi,xj,yi,yj                                 ![m] elements coordenates
+    integer :: n_nodes                                       !number of the nodes
+    integer :: n_elements                                    !number of the nodes
+    integer :: i,j,col                                       !Counters
+    real :: E                                                ![N/m²] Young Modulus
+    real :: x,y,xi,xj,yi,yj                                  ![m] elements coordenates
     real :: c,s                                              ![] values for cossine and sine values
-    integer :: i,j,col
-    real, dimension(:), allocatable :: A                                                ![m²] Section area of the element
+    real, dimension(:), allocatable :: A                     ![m²] Section area of the element
     real, dimension(:,:), allocatable :: nodes               ![m](x,y) nodes coordenates
-    real, dimension(:,:), allocatable :: links               ![m](x,y) nodes coordenates
+    real, dimension(:,:), allocatable :: links               !(i,j) Link of each element
     real, dimension(:,:), allocatable :: output_matrix       ![-] the input's matrix used in the stiffness matrix 
-    real, dimension(:), allocatable :: L               ![m](x,y) nodes coordenates
-    real, dimension(:), allocatable :: alfa                                            ![degree] angle between two elements 
-    real, parameter :: pi = 3.1415927
-    integer, parameter :: ikind=selected_real_kind(p=18)    !define precision 
-    !real(kind = ikind) :: E                                 ![N/m²] Young Modulus
-    real :: E
+    real, dimension(:), allocatable :: L                     ![m](x,y) nodes coordenates
+    real, dimension(:), allocatable :: alfa                  ![degree] angle between two elements 
+    real, parameter :: pi = 3.1415927                        ! Define the pi constant
 
     print *
     print *, '-------------- Building Mesh --------------'
@@ -44,8 +42,6 @@ program mesh
     allocate ( nodes(n_nodes,2) )
 
 
-
-
     open(3, file='input_nodes.dat')
     DO i = 1,n_nodes
         READ(3,*) (nodes(i,col),col=1,2)
@@ -58,10 +54,6 @@ program mesh
     print *, '-------------- Importing Links --------------'
     
     allocate ( links(n_elements,2) ) 
-
-    open(4, file='input_links.dat')
-    read(4,*) links
-    close(4)
 
     open(4, file='input_links.dat')
     DO i = 1,n_elements
@@ -130,7 +122,7 @@ program mesh
             !print *, 'nodes: ',xi,yi
     !    end do
     !end do
-    !print *,'==================================================='
+    !print *,'===================================================
 
     print *
     print *, 'Mesh Builded'
