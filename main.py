@@ -43,7 +43,16 @@ links.append(link3)
 n_elements = 3
 
 #Define the Forces
-F = []
+F = [0, #[N] force in the first node in X component
+     0, #[N] force in the first node in Y component
+     0, #[N] Force x2
+     0, #[N] Force y2
+     0, #[N] Force x3
+     600, #[N] Force y2
+     0, #[N] Force x4
+     0 #[N] Force y4
+]
+
 
 test = fe.mesh(nodes,links)
 test.plot_mesh()
@@ -53,6 +62,7 @@ test.export_young_modolus(E)
 test.export_setup(nodes,n_elements)
 test.export_free_node(free_nodes)
 test.export_elements_area(A)
+test.export_loads(F)
 
 
 #exemple = fe.finite_elements_methods()
