@@ -7,11 +7,11 @@ program stiffness_matrix
     implicit none
     integer :: n_elements                                                  !number of elements
     integer :: n_nodes                                                     !number of the nodes 
+    integer :: i,j,col                                                     !Counters
     double precision, dimension(:,:), allocatable :: k                     !create the stiffness matrix
-    real, dimension(:,:), allocatable :: mesh                  !import the mesh builded in mesh.f95
+    real, dimension(:,:), allocatable :: mesh                              !import the mesh builded in mesh.f95
     real, dimension(:,:), allocatable :: links                             !(i,j) Link of each element
     real, dimension(:,:), allocatable :: nodes                             ![m](x,y) nodes coordenates
-    integer :: i,j,col                                                     !Counters
 
     open(1, file='setup.dat')
     read(1,*) n_nodes,n_elements
