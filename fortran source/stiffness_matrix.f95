@@ -43,15 +43,15 @@ program stiffness_matrix
     end do
     close(4)
 
-    allocate( k(n_elements*4,8) )
+    allocate( k(n_elements*4,4) )
 
     DO i=1,n_elements*4
-        DO j=1,8
+        DO j=1,4
             k(i,j)=0
         END DO
     END DO
 
-    DO i=1,n_elements,4
+    DO i=1,n_elements*4,4
         
         current_element = i/4
 
@@ -96,9 +96,17 @@ program stiffness_matrix
             print*, 'K', k
     print *,'==================================================='
 
+
+    open(5, file = 'stiffness_matrix.dat')
+    do i=1,n_elements*4
+        write(5,*) k(i,:)
+    end do
+    close(5)
+
     deallocate(nodes)
     deallocate(links)
     deallocate(k)
+    deallocate(mesh)
 
     
 
