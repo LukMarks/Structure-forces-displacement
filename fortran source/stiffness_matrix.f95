@@ -7,7 +7,7 @@ program stiffness_matrix
     implicit none
     integer :: n_elements                                                  !number of elements
     integer :: n_nodes                                                     !number of the nodes 
-    integer :: i,j,col                                                     !Counters
+    integer :: i,j,col,current_element                                     !Counters
     double precision, dimension(:,:), allocatable :: k                     !create the stiffness matrix
     real, dimension(:,:), allocatable :: mesh                              !import the mesh builded in mesh.f95
     real, dimension(:,:), allocatable :: links                             !(i,j) Link of each element
@@ -43,6 +43,43 @@ program stiffness_matrix
     end do
     close(4)
 
+    allocate( k(n_elements*4,8) )
+
+    DO i=1,n_elements*4
+        DO j=1,8
+            k(i,j)=0
+        END DO
+    END DO
+
+    DO i=1,n_elements,4
+        
+        current_element = i/4
+
+        !Stiffness for the x coordenate of i node
+        k(i,1) = mesh(current_element,10)
+        k(i,2) = mesh(current_element,12)
+        k(i,3) = -mesh(current_element,10)
+        k(i,4) = -mesh(current_element,12)
+        !Stiffness for the y coordenate of i node
+        K(i+1,1) = mesh(current_element,12)
+        k(i+1,2) = mesh(current_element,11)
+        k(i+1,3) = -mesh(current_element,12)
+        k(i+1,4) = -mesh(current_element,11)
+        !Stiffness for the x coordenate of i node
+        k(i+2,1) = -mesh(current_element,10)
+        k(i+2,2) = -mesh(current_element,12)
+        k(i+2,3) = mesh(current_element,10)
+        k(i+2,4) = mesh(current_element,12)
+        !Stiffness for the y coordenate of j node
+        k(i+3,1) = -mesh(current_element,12)
+        k(i+3,2) = -mesh(current_element,11)
+        k(i+3,3) = mesh(current_element,12)
+        k(i+3,4) = mesh(current_element,11)
+
+    END DO
+
+
+
     print *
     
     print *,'================= Debug =================================='
@@ -55,10 +92,13 @@ program stiffness_matrix
             print *, 'links', links
             print * 
             print *, 'mesh', mesh
+            print *
+            print*, 'K', k
     print *,'==================================================='
 
     deallocate(nodes)
     deallocate(links)
+    deallocate(k)
 
     
 
