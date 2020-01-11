@@ -60,6 +60,13 @@ class mesh:
         f.close()
         return
 
+    def export_loads(self, load): #export the loads for the fortran routine
+        f = open('load.dat','w')
+        for i in range(0,len(load)):
+            f.write('%f \n' %(load[i]))
+        f.close
+        return
+
     def plot_mesh(self):
         plt.figure(1)
         for i in range(0,len(self.nodes)):
