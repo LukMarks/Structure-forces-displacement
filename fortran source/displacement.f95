@@ -39,8 +39,6 @@ program displacement
     DO i = 1,n_nodes*2
         READ(4,*) free_nodes(i)    
     END DO
-    
-
 
     deallocate(nodes)
     deallocate(links)
