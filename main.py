@@ -70,5 +70,5 @@ test.export_loads(F)
 
 end = time.time() #end the timer
 
-time_elapsed = start-end
+time_elapsed = end-start
 print(time_elapsed)
