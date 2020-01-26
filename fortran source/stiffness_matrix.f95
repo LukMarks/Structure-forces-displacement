@@ -8,7 +8,8 @@ program stiffness_matrix
     integer :: n_elements                                                  !number of elements
     integer :: n_nodes                                                     !number of the nodes 
     integer :: i,j,col,current_element                                     !Counters
-    integer :: xi,xj,yi,yj                                                 ![m] coordenates indexes
+    integer :: xi,yi                                                       ![m] coordenates indexes
+    integer :: xj,yj                                                       ![m] coordenates indexes
     double precision, dimension(:,:), allocatable :: k                     ![N/m]create the stiffness matrix for each element
     double precision, dimension(:,:), allocatable :: k_mesh                ![N/m]create the mesh stiffness matrix
     real, dimension(:,:), allocatable :: mesh                              !import the mesh builded in mesh.f95
@@ -45,9 +46,9 @@ program stiffness_matrix
     end do
     close(4)
 
-    allocate( k(n_elements*4,4) )
+    allocate( k(n_nodes*2,n_nodes*2) )
 
-    DO i=1,n_elements*4
+    DO i=1,n_nodes*2
         DO j=1,4
             k(i,j)=0
         END DO
@@ -55,81 +56,50 @@ program stiffness_matrix
 
     
 
-    DO i=1,n_elements*4,4
+    DO i=1,n_elements
         
-        current_element = i/4
+        !Get node position
+
+        print *
+        print *,'element: ',i
+
+        xi = links(i,1)*2-1
+        yi = links(i,1)*2
+
+        print *,'--------------------------------------'
+        print *
+        print *,'node i ',xi,yi
+
+        xj = links(i,2)*2-1
+        yj = links(i,2)*2
+
+        print *
+        print *,'node j ',xj,yj
+        print *,'--------------------------------------'
+
 
         !Stiffness for the x coordenate of i node
-        k(i,1) = mesh(current_element,10)
-        k(i,2) = mesh(current_element,12)
-        k(i,3) = -mesh(current_element,10)
-        k(i,4) = -mesh(current_element,12)
+        k(xi,xi) = mesh(i,10)
+        k(xi,yi) = mesh(i,12)
+        k(xi,xj) = -mesh(i,10)
+        k(xi,yj) = -mesh(i,12)
         !Stiffness for the y coordenate of i node
-        K(i+1,1) = mesh(current_element,12)
-        k(i+1,2) = mesh(current_element,11)
-        k(i+1,3) = -mesh(current_element,12)
-        k(i+1,4) = -mesh(current_element,11)
+        K(yi,xi) = mesh(i,12)
+        k(yi,yi) = mesh(i,11)
+        k(yi,xj) = -mesh(i,12)
+        k(yi,yj) = -mesh(i,11)
         !Stiffness for the x coordenate of i node
-        k(i+2,1) = -mesh(current_element,10)
-        k(i+2,2) = -mesh(current_element,12)
-        k(i+2,3) = mesh(current_element,10)
-        k(i+2,4) = mesh(current_element,12)
+        k(xj,xi) = -mesh(i,10)
+        k(xj,yi) = -mesh(i,12)
+        k(xj,xj) = mesh(i,10)
+        k(xj,yj) = mesh(i,12)
         !Stiffness for the y coordenate of j node
-        k(i+3,1) = -mesh(current_element,12)
-        k(i+3,2) = -mesh(current_element,11)
-        k(i+3,3) = mesh(current_element,12)
-        k(i+3,4) = mesh(current_element,11)
+        k(xj,xi) = -mesh(i,12)
+        k(xj,yi) = -mesh(i,11)
+        k(xj,xj) = mesh(i,12)
+        k(xj,yj) = mesh(i,11)
 
     END DO
-
-
-    allocate( k_mesh(n_elements*4,n_elements*4) )
-
-    DO i=1,n_elements*4
-        DO j=1,n_elements*4
-            k_mesh(i,j)=0
-        END DO
-    END DO
-
-    DO i=1,n_elements*4,4
-
-        current_element = i/4
-
-        xi = links(current_element,1)*2-1
-        yi = links(current_element,1)*2
-
-
-        xj = links(current_element,2)*2-1
-        yj = links(current_element,1)*2
-       
-        print *,'xi',xi
-        print *,'yi',yi
-        print *,'xj',xj
-        print *,'yj',yj
-
-        k_mesh(xi,xi) = k(i,1)
-        k_mesh(xi,yi) = k(i,2)
-        k_mesh(xi,xj) = k(i,3)
-        k_mesh(xi,yj) = k(i,4)
-
-        k_mesh(yi,xi) = k(i+1,1)
-        k_mesh(yi,yi) = k(i+1,2)
-        k_mesh(yi,xj) = k(i+1,3)
-        k_mesh(yi,yj) = k(i+1,4)
-
-        k_mesh(xj,xi) = k(i+2,1)
-        k_mesh(xj,yi) = k(i+2,2)
-        k_mesh(xj,xj) = k(i+2,3)
-        k_mesh(xj,yj) = k(i+2,4)
-
-        k_mesh(yj,xi) = k(i+3,1)
-        k_mesh(yj,yi) = k(i+3,2)
-        k_mesh(yj,xj) = k(i+3,3)
-        k_mesh(yj,yj) = k(i+3,4)
-
-
-    END DO
-
 
     print *
     
@@ -144,22 +114,25 @@ program stiffness_matrix
             print * 
             !print *, 'mesh', mesh
             print *
-            !print*, 'K', k
-            print *
-            print*, 'K_mesh', k_mesh
+            print*, 'K'!, k
+            DO i=1,8
+                print *, 'line: ',i
+                write(*,1) k(i,:)
+                1 format(8f20.2)
+            END DO
+
     print *,'==================================================='
 
 
     open(5, file = 'stiffness_matrix.dat')
-    do i=1,n_elements*4
-        write(5,*) k_mesh(i,:)
+    do i=1,n_nodes*2
+        write(5,*) k(i,:)
     end do
     close(5)
 
     deallocate(nodes)
     deallocate(links)
     deallocate(k)
-    deallocate(k_mesh)
     deallocate(mesh)
 
     
